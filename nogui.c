@@ -860,13 +860,13 @@ int CheckPlasimNamelist(void)
 
    // Set mpstep to a safe value
 
-   if (Resolution > 0) *mpstep = PlasimSteps[Resolution];
-   else
-   {
-      s = log(Latitudes / 32.0) / log(2.0);
-      safe_mpstep = 45.0 / pow(3.0,s);
-      if (*mpstep > safe_mpstep) *mpstep = safe_mpstep;
-   }
+   // if (Resolution > 0) *mpstep = PlasimSteps[Resolution];
+   // else
+   // {
+   //    s = log(Latitudes / 32.0) / log(2.0);
+   //    safe_mpstep = 45.0 / pow(3.0,s);
+   //    if (*mpstep > safe_mpstep) *mpstep = safe_mpstep;
+   // }
 
    // Make sure # of CPU's is a power of 2 and in the proper range
 
@@ -1040,11 +1040,12 @@ int Build(int model)
 
 void BuildScripts(void)
 {
-    // CheckPlasimNamelist();
-    // GenerateNames();
-    // WritePlasimNamelist();
-    if (!Build(PLASIM)) exit(0);
-    WriteRunScript(PLASIM);
+   // CheckPlasimNamelist();
+   // Cores = 4;
+   GenerateNames();
+   // WritePlasimNamelist();
+   if (!Build(PLASIM)) exit(0);
+   WriteRunScript(PLASIM);
 }
 
 int main(int argc, char *argv[])
