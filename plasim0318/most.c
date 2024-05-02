@@ -3504,6 +3504,7 @@ void SaveRun(void)
    BuildScripts();
    if ((noro || Yoden) && !Preprocessed && Model == PUMA) PreProcess();
    sprintf(command,"%s/run/%s %s/run &",ShortModelName[Model],run_name,ShortModelName[Model]);
+   printf(command);
    system(command);
    printf("\n=== Success: Launched process %s ===\n\n",run_name);
    Exit();

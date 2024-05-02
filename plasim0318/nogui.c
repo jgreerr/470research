@@ -238,6 +238,7 @@ struct FrameStruct
 int FrameNo;
 int Buttons;
 int Button1Down = 1;
+int run = 1;
 
 #define DIMBUTTON 5
 
@@ -1054,9 +1055,11 @@ void SaveRun(void)
    char command[256];
    BuildScripts();
    // if ((noro || Yoden) && !Preprocessed && Model == PUMA) PreProcess();
-   sprintf(command,"%s/run/%s %s/run &",ShortModelName[Model],run_name,ShortModelName[Model]);
-   system(command);
-   printf("\n=== Success: Launched process %s ===\n\n",run_name);
+   if (run == 0) {
+      sprintf(command,"%s/run/%s %s/run &",ShortModelName[Model],run_name,ShortModelName[Model]);
+      system(command);
+      printf("\n=== Success: Launched process %s ===\n\n",run_name);
+   }
 }
 
 int main(int argc, char *argv[])
@@ -1064,22 +1067,36 @@ int main(int argc, char *argv[])
    Cores = 1;
    Levels = 10;
    SimYears = 1;
+   run = 1;
+
    int opt;
+   int resolution_type = RES_T31;
 
    // Parse command line options
-   while ((opt = getopt(argc, argv, "n:l:y:e:")) != -1) {
+   while ((opt = getopt(argc, argv, "n:l:y:e:t:r")) != -1) {
       switch (opt) {
          case 'n':
-            Cores = atoi(optarg);
+            Cores = strtol(optarg, NULL, 10);
             break;
          case 'l':
-            Levels = atoi(optarg);
+            Levels = strtol(optarg, NULL, 10);
             break;
          case 'y':
-            SimYears = atoi(optarg);
+            SimYears = strtol(optarg, NULL, 10);
             break;
          case 'e':
             strncpy(experimentName, optarg, 256);
+            break;
+         case 'r':
+            run = 0;
+            break;
+         case 't':
+            resolution_type = strtol(optarg, NULL, 10);
+            if (resolution_type >= RESOLUTIONS) {
+               fprintf(stderr, "Resolution type not valid.");
+               exit(EXIT_FAILURE);
+            }
+            Latitudes = ResLat[resolution_type];
             break;
          default:
             fprintf(stderr, "Usage: %s [-n num_cores] [-l num_levels]\n", argv[0]);
